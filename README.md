@@ -462,7 +462,7 @@ Possible future improvements include:
 
 ## 👨‍💻 Author
 
-**Demikha Zakaria**
+**Demikha Souha**
 
 Java / Spring Boot Backend Developer
 
