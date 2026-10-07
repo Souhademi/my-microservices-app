@@ -1,48 +1,74 @@
-Microservices Company Management System
+# Microservices Company Management System
 
-A Spring Boot Microservices application for managing companies, jobs, and reviews.
-The system uses Spring Cloud components for service discovery, centralized configuration, and distributed tracing.
+A **Spring Boot Microservices** application for managing companies, jobs, and reviews.
+The system uses **Spring Cloud** components for service discovery, centralized configuration, and distributed tracing.
 
-🏗️ Architecture
+## 🏗️ Architecture
 
 The application is composed of the following services:
 
-CompanyMS — Manages companies.
-JobMS — Manages job postings.
-ReviewMS — Manages company reviews.
-Config Server — Provides centralized configuration for all microservices.
-Eureka Server — Service discovery and registration.
-Zipkin — Distributed tracing and request monitoring.
-PostgreSQL — Database used by the microservices.
-Architecture Overview
-Client
-  │
-  ▼
-JobMS
-  │
-  │ discovers CompanyMS through Eureka
-  ▼
-Eureka Server
-  │
-  ▼
-CompanyMS
-  │
-  ▼
-Company PostgreSQL
-🛠️ Technologies
-Technology	Purpose
-Java	Programming language
-Spring Boot	Microservice development
-Spring Cloud	Microservices infrastructure
-Spring Data JPA	Database access
-PostgreSQL	Relational database
-Spring Cloud Config	Centralized configuration
-Eureka	Service discovery
-Zipkin	Distributed tracing
-Maven	Dependency management
-REST API	Communication between services
-Git / GitHub	Version control
-📁 Project Structure
+* **CompanyMS** — Manages companies.
+* **JobMS** — Manages job postings.
+* **ReviewMS** — Manages company reviews.
+* **Config Server** — Provides centralized configuration for all microservices.
+* **Eureka Server** — Service discovery and registration.
+* **Zipkin** — Distributed tracing and request monitoring.
+* **PostgreSQL** — Database used by the microservices.
+
+### Architecture Overview
+
+```text
+                         ┌─────────────────────┐
+                         │    Config Server    │
+                         │     Spring Cloud   │
+                         └──────────┬──────────┘
+                                    │
+                         Configuration
+                                    │
+             ┌──────────────────────┴──────────────────────┐
+             │                                             │
+             ▼                                             ▼
+   ┌──────────────────┐                           ┌──────────────────┐
+   │   Eureka Server   │                           │      Zipkin      │
+   │ Service Discovery │                           │ Distributed Trace│
+   └────────┬─────────┘                           └──────────────────┘
+            │
+            │ Service Registration
+            │
+     ┌──────┼───────────────┐
+     │      │               │
+     ▼      ▼               ▼
+┌────────┐ ┌────────┐ ┌────────────┐
+│Company │ │  Job   │ │   Review   │
+│   MS   │ │   MS   │ │     MS     │
+└───┬────┘ └───┬────┘ └─────┬──────┘
+    │           │            │
+    ▼           ▼            ▼
+┌────────┐ ┌────────┐ ┌────────────┐
+│Postgres│ │Postgres│ │  Postgres  │
+│Company │ │  Job   │ │   Review   │
+└────────┘ └────────┘ └────────────┘
+```
+
+## 🛠️ Technologies
+
+| Technology          | Purpose                        |
+| ------------------- | ------------------------------ |
+| Java                | Programming language           |
+| Spring Boot         | Microservice development       |
+| Spring Cloud        | Microservices infrastructure   |
+| Spring Data JPA     | Database access                |
+| PostgreSQL          | Relational database            |
+| Spring Cloud Config | Centralized configuration      |
+| Eureka              | Service discovery              |
+| Zipkin              | Distributed tracing            |
+| Maven               | Dependency management          |
+| REST API            | Communication between services |
+| Git / GitHub        | Version control                |
+
+## 📁 Project Structure
+
+```text
 company-microservices/
 │
 ├── configserver/
@@ -68,41 +94,54 @@ company-microservices/
 ├── docker-compose.yml
 │
 └── README.md
-🔗 Microservices
-1. CompanyMS
+```
+
+## 🔗 Microservices
+
+### 1. CompanyMS
 
 Responsible for company management.
 
 Main operations:
 
+```text
 POST   /companies
 GET    /companies
 GET    /companies/{id}
 PUT    /companies/{id}
 DELETE /companies/{id}
+```
 
 Example company:
 
+```json
 {
   "name": "Tech Solutions",
   "description": "Software development company",
   "city": "Constantine",
   "country": "Algeria"
 }
-2. JobMS
+```
+
+---
+
+### 2. JobMS
 
 Responsible for managing job offers.
 
 Main operations:
 
+```text
 POST   /jobs
 GET    /jobs
 GET    /jobs/{id}
 PUT    /jobs/{id}
 DELETE /jobs/{id}
+```
 
 Example job:
 
+```json
 {
   "title": "Java Backend Developer",
   "description": "Develop Spring Boot microservices",
@@ -111,55 +150,65 @@ Example job:
   "location": "Remote",
   "companyId": 1
 }
+```
 
 JobMS communicates with CompanyMS to retrieve company information.
 
-3. ReviewMS
+---
+
+### 3. ReviewMS
 
 Responsible for managing company reviews.
 
 Main operations:
 
+```text
 POST   /reviews
 GET    /reviews
 GET    /reviews/{id}
 PUT    /reviews/{id}
 DELETE /reviews/{id}
+```
 
 Example review:
 
+```json
 {
   "title": "Great company",
   "description": "Good environment for developers",
   "rating": 5,
   "companyId": 1
 }
+```
 
 ReviewMS communicates with CompanyMS to retrieve company information.
 
-☁️ Config Server
+## ☁️ Config Server
 
-The Config Server provides centralized configuration to all microservices.
+The **Config Server** provides centralized configuration to all microservices.
 
 Example:
 
+```yaml
 spring:
   application:
     name: companyms
 
   config:
     import: optional:configserver:http://localhost:8071
+```
 
 Centralized configuration can contain:
 
-Database configuration
-Eureka configuration
-Zipkin configuration
-Application properties
-Service URLs
+* Database configuration
+* Eureka configuration
+* Zipkin configuration
+* Application properties
+* Service URLs
 
 Example configuration:
 
+```yaml
 server:
   port: 8081
 
@@ -173,43 +222,55 @@ eureka:
   client:
     service-url:
       defaultZone: http://localhost:8761/eureka
-🔎 Eureka Server
+```
 
-Eureka provides service discovery.
+## 🔎 Eureka Server
+
+Eureka provides **service discovery**.
 
 Eureka Dashboard:
 
+```text
 http://localhost:8761
+```
 
 Each microservice registers itself with Eureka.
 
 Example:
 
+```yaml
 eureka:
   client:
     service-url:
       defaultZone: http://localhost:8761/eureka
+```
 
 Registered services:
 
+```text
 COMPANYMS
 JOBMS
 REVIEWMS
 CONFIGSERVER
+```
 
 This allows services to communicate using service names instead of hard-coded IP addresses.
 
 Example:
 
+```text
 http://COMPANYMS/companies/1
-📊 Zipkin
+```
 
-Zipkin is used for distributed tracing.
+## 📊 Zipkin
+
+Zipkin is used for **distributed tracing**.
 
 It allows you to follow a request across multiple microservices.
 
 Example:
 
+```text
 Client
   │
   ▼
@@ -218,78 +279,116 @@ JobMS
   ├──────► CompanyMS
   │
   └──────► ReviewMS
+```
 
 Zipkin helps identify:
 
-Request latency
-Service-to-service calls
-Errors
-Slow services
-Distributed request flow
+* Request latency
+* Service-to-service calls
+* Errors
+* Slow services
+* Distributed request flow
 
 Zipkin UI:
 
+```text
 http://localhost:9411
-🗄️ PostgreSQL
+```
 
-Each microservice can use its own database following the Database-per-Service pattern.
+## 🗄️ PostgreSQL
+
+Each microservice can use its own database following the **Database-per-Service** pattern.
 
 Example:
 
+```text
 PostgreSQL
 │
 ├── companydb
 ├── jobdb
 └── reviewdb
+```
 
 This keeps services independent and prevents direct access to another service's database.
 
-🐳 Running with Docker
+## 🐳 Running with Docker
 
 Make sure Docker is installed.
 
 Start the infrastructure:
 
+```bash
 docker compose up -d
+```
 
 Check running containers:
 
+```bash
 docker ps
+```
 
 Stop the containers:
 
+```bash
 docker compose down
-▶️ Running the Application
-1. Start Config Server
+```
+
+## ▶️ Running the Application
+
+### 1. Start Config Server
+
+```bash
 cd configserver
 ./mvnw spring-boot:run
-2. Start Eureka Server
+```
+
+### 2. Start Eureka Server
+
+```bash
 cd eurekaserver
 ./mvnw spring-boot:run
-3. Start CompanyMS
+```
+
+### 3. Start CompanyMS
+
+```bash
 cd companyms
 ./mvnw spring-boot:run
-4. Start JobMS
+```
+
+### 4. Start JobMS
+
+```bash
 cd jobms
 ./mvnw spring-boot:run
-5. Start ReviewMS
+```
+
+### 5. Start ReviewMS
+
+```bash
 cd reviewms
 ./mvnw spring-boot:run
-🔌 Default Ports
-Service	Port
-Config Server	8071
-Eureka Server	8761
-CompanyMS	8081
-JobMS	8082
-ReviewMS	8083
-Zipkin	9411
-PostgreSQL	5432
-🔄 Service Communication
+```
+
+## 🔌 Default Ports
+
+| Service       |   Port |
+| ------------- | -----: |
+| Config Server | `8071` |
+| Eureka Server | `8761` |
+| CompanyMS     | `8081` |
+| JobMS         | `8082` |
+| ReviewMS      | `8083` |
+| Zipkin        | `9411` |
+| PostgreSQL    | `5432` |
+
+## 🔄 Service Communication
 
 The services communicate through REST APIs.
 
 Example:
 
+```text
 JobMS
   │
   │ GET company information
@@ -302,62 +401,74 @@ CompanyMS
   │
   ▼
 PostgreSQL
+```
 
 Service discovery removes the need to hard-code service IP addresses.
 
-🧪 API Testing
+## 🧪 API Testing
 
 You can test the REST APIs using:
 
-Postman
-Insomnia
-cURL
+* Postman
+* Insomnia
+* cURL
 
 Example:
 
+```bash
 curl http://localhost:8081/companies
+```
 
 Get jobs:
 
+```bash
 curl http://localhost:8082/jobs
+```
 
 Get reviews:
 
+```bash
 curl http://localhost:8083/reviews
-🔐 Best Practices
+```
+
+## 🔐 Best Practices
 
 This project follows several microservices principles:
 
-Independent services
-RESTful APIs
-Database per service
-Service discovery with Eureka
-Centralized configuration
-Distributed tracing
-Environment-based configuration
-Containerized infrastructure
-Loose coupling between services
-🚀 Future Improvements
+* Independent services
+* RESTful APIs
+* Database per service
+* Service discovery with Eureka
+* Centralized configuration
+* Distributed tracing
+* Environment-based configuration
+* Containerized infrastructure
+* Loose coupling between services
+
+## 🚀 Future Improvements
 
 Possible future improvements include:
 
-API Gateway
-Spring Security
-JWT authentication
-Dockerized microservices
-Kubernetes deployment
-Prometheus & Grafana monitoring
-Circuit Breaker with Resilience4j
-Kafka/RabbitMQ for asynchronous communication
-CI/CD with GitHub Actions
-Unit and integration testing
-👨‍💻 Author
+* API Gateway
+* Spring Security
+* JWT authentication
+* Dockerized microservices
+* Kubernetes deployment
+* Prometheus & Grafana monitoring
+* Circuit Breaker with Resilience4j
+* Kafka/RabbitMQ for asynchronous communication
+* CI/CD with GitHub Actions
+* Unit and integration testing
 
-Demikha Zakaria
+## 👨‍💻 Author
+
+**Demikha Zakaria**
 
 Java / Spring Boot Backend Developer
 
-Technologies
+### Technologies
+
+```text
 Java
 Spring Boot
 Spring Cloud
@@ -369,6 +480,8 @@ REST APIs
 Eureka
 Config Server
 Zipkin
-📄 License
+```
+
+## 📄 License
 
 This project is intended for educational and portfolio purposes.
