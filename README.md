@@ -15,36 +15,20 @@ Eureka Server — Service discovery and registration.
 Zipkin — Distributed tracing and request monitoring.
 PostgreSQL — Database used by the microservices.
 Architecture Overview
-                         ┌─────────────────────┐
-                         │    Config Server    │
-                         │     Spring Cloud    │
-                         └──────────┬──────────┘
-                                    │
-                         Configuration
-                                    │
-             ┌──────────────────────┴──────────────────────┐
-             │                                             │
-             ▼                                             ▼
-   ┌──────────────────┐                           ┌──────────────────┐
-   │   Eureka Server  │                           │      Zipkin      │
-   │ Service Discovery│                           │ Distributed Trace│
-   └────────┬─────────┘                           └──────────────────┘
-            │
-            │ Service Registration
-            │
-     ┌──────┼───────────────┐
-     │      │               │
-     ▼      ▼               ▼
-┌────────┐ ┌────────┐ ┌────────────┐
-│Company │ │  Job   │ │   Review   │
-│   MS   │ │   MS   │ │     MS     │
-└───┬────┘ └───┬────┘ └─────┬──────┘
-    │           │            │
-    ▼           ▼            ▼
-┌────────┐ ┌────────┐ ┌────────────┐
-│Postgres│ │Postgres│ │  Postgres  │
-│Company │ │  Job   │ │   Review   │
-└────────┘ └────────┘ └────────────┘
+Client
+  │
+  ▼
+JobMS
+  │
+  │ discovers CompanyMS through Eureka
+  ▼
+Eureka Server
+  │
+  ▼
+CompanyMS
+  │
+  ▼
+Company PostgreSQL
 🛠️ Technologies
 Technology	Purpose
 Java	Programming language
